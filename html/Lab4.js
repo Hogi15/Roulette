@@ -1,3 +1,5 @@
+let sock;
+
 function Spin(){
 
 let wheel = [0,34,10,21,28,4,18,9,27,22,
@@ -12,6 +14,15 @@ location = location - remainder;
 
 let ball = wheel[location];
 
+console.log(ball);
+sock.send(ball);
+
+}
+
+
+
+function sendresult(event){
+let ball = event.data
 let answer = [ball, ];
 
 if (location%2){answer.push("Black")
@@ -41,4 +52,31 @@ else{answer.push("failed")
 
 console.log(answer);
 
+let tbl = document.getElementById("answers");
+
+let tr = document.createElement("tr");
+tbl.appendChild(tr);
+for(let j=0;j<answer.length;++j){
+    let td = document.createElement("td");
+    tr.appendChild(td);
+    let txt = document.createTextNode( answer[j] );
+    td.appendChild( txt );
 }
+
+}
+
+
+
+function main(){
+    sock = new WebSocket("ws://"+document.location.host+"/sock");
+    sock.addEventListener("open", ()=>{ 
+        document.getElementById("spinbutton").disabled=0
+        console.log("SOCK IS OPEN");
+    });
+    sock.addEventListener("message", sendresult);
+
+}
+
+
+
+main();

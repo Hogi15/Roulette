@@ -1,6 +1,7 @@
 import asyncio
 import tornado.web
 import os.path
+import Sock
 
 HTMLDIR = os.path.abspath(
     os.path.join(
@@ -9,8 +10,13 @@ HTMLDIR = os.path.abspath(
     )
 )
 
+class IndexPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write("<a href='/static/roulette.html'>Roulette</a>")
+
 def makeApp():
     endpoints=[
+         ("/sock", Sock.Handler)
     ]
     app = tornado.web.Application(endpoints, static_path=HTMLDIR)
     app.listen(8000)
